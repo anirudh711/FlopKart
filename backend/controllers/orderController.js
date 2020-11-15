@@ -32,4 +32,37 @@ if(orderItems && orderItems.length==0){
     res.status(201).json(createdOrder)
 }
 });
-export {addOrderItems};
+//@route GET /api/orders/:id
+//@desc create order by ID
+//@access Private
+const getOrderById = asyncHandler(async (req, res) => {
+ const order =await Order.findById(req.params.id).populate('user')
+  if(order){
+    order.isPaid=true;
+    order.paidAt=Date.now();
+    order.paymentResult={
+      id:req.body.id,
+      status:req.body.status,
+      update_time: req.body.update_time,
+      email_address=req.body.payer.email_address
+    }
+    const updatedOrder= await order.save()
+    res.json(updatedOrder)
+  }else{
+    res.status(404)
+  }
+});
+
+
+//@route GET /api/orders/:id/pay
+//@desc update order to be paid
+//@access Private
+const updateOrderToPaid = asyncHandler(async (req, res) => {
+  const order =await Order.findById(req.params.id)
+   if(order){
+     res.json(order)
+   }else{
+     res.status(404)
+   }
+ });
+export {addOrderItems,getOrderById,updateOrderToPaid};
