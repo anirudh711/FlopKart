@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from "react";
+import React, {useEffect } from "react";
 import {Link} from 'react-router-dom'
 import { Button, Row, Col, ListGroup, Image, Card } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
@@ -23,7 +23,7 @@ const PlaceOrderScreen = ({history}) => {
             history.push(`/order/${order._id}`)
         }
         //es-lint-disable-next-line
-    },[history,success])
+    },[history,success,order])
     const placeOrderHandler=({})=>{
         dispatch(createOrder({
             orderItems:cart.cartItems,

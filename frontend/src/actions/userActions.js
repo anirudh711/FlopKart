@@ -13,8 +13,9 @@ import {
   USER_REGISTER_FAIL,
   USER_REGISTER_REQUEST,
   USER_REGISTER_SUCCESS,
+  USER_DEETS_RESET
 } from "../constants/userConstants";
-
+import {ORDER_LIST_MY_RESET} from "../constants/orderConstants"
 export const register = (name, email, password) => async (dispatch) => {
   try {
     dispatch({
@@ -143,4 +144,6 @@ export const editUserProfile = (user) => async (dispatch, getState) => {
 export const logout = () => async (dispatch) => {
   localStorage.removeItem("userInfo");
   dispatch({ type: USER_LOGOUT });
+  dispatch({ type: USER_DEETS_RESET });
+  dispatch({ type: ORDER_LIST_MY_RESET });
 };

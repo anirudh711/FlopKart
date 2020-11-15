@@ -16,6 +16,8 @@ app.get('/',async(req,res)=>{
 app.use('/auth/users',userRoutes)
 app.use('/api/products',productRoutes)
 app.use('/api/orders',orderRoutes)
+
+app.get('/api/config/paypal',async(req,res)=>res.send(process.env.PAYPAL_CLIENT_ID))
 app.use(notFound);
 app.use(errorHandler)
 const PORT=process.env.PORT || 5000;
