@@ -20,7 +20,10 @@ import {
   USER_LIST_RESET,
   USER_DELETE_REQUEST,
   USER_DELETE_SUCCESS,
-  USER_DELETE_FAIL
+  USER_DELETE_FAIL,
+  USER_UPDATE_REQUEST,
+  USER_UPDATE_FAIL,
+  USER_UPDATE_SUCCESS
 } from "../constants/userConstants";
 import {ORDER_LIST_MY_RESET} from "../constants/orderConstants"
 export const register = (name, email, password) => async (dispatch) => {
@@ -191,13 +194,45 @@ export const deleteUser = (id) => async (dispatch, getState) => {
         Authorization: `Bearer ${userInfo.token}`,
       },
     };
-    const { data } = await axios.delete(`/auth/users/${id}`, config);
+     await axios.delete(`/auth/users/${id}`, config);
     dispatch({
       type: USER_DELETE_SUCCESS,
     }); 
   } catch (error) {
     dispatch({
       type: USER_DELETE_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+export const updateUser = (user) => async (dispatch, getState) => {
+  try {
+    dispatch({
+      type: USER_UPDATE_REQUEST,
+    });
+    const {
+      userLogin: { userInfo },
+    } = getState();
+    const config = {
+      headers: {
+        'Content-Type':'application/json',
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
+     const {data} =await axios.put(`/auth/users/${user._id}`,user, config);
+    dispatch({
+      type: USER_UPDATE_SUCCESS,
+    }); 
+    dispatch({
+      type: USER_DEETS_SUCCESS,
+      payload:data 
+    }); 
+  } catch (error) {
+    dispatch({
+      type: USER_UPDATE_FAIL,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message
