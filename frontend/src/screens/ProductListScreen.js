@@ -4,7 +4,8 @@ import { Table, Button, Row, Col } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import Message from "../components/Message";
 import Loader from "../components/Loader";
-import { listProducts, deleteProduct } from "../actions/productAction";
+import { listProducts, deleteProduct,createProduct } from "../actions/productAction";
+import {PRODUCT_CREATE_RESET} from "../constants/productConstants"
 const ProductListScreen = ({ history, match }) => {
   const dispatch = useDispatch();
   const productList = useSelector((state) => state.productList);
@@ -17,14 +18,25 @@ const ProductListScreen = ({ history, match }) => {
     success: successDelete,
     error: errorDelete,
   } = productDelete;
+  const productCreate = useSelector((state) => state.productCreate);
+  const {
+    loading: loadingCreate,
+    success: successCreate,
+    error: errorCreate,
+    product:createdProduct
+  } = productCreate;
 
   useEffect(() => {
-    if (userInfo && userInfo.isAdmin) {
-      dispatch(listProducts());
-    } else {
+    dispatch({type:PRODUCT_CREATE_RESET})
+    if (!userInfo.isAdmin) {
       history.push("/login");
     }
-  }, [dispatch, history, userInfo, successDelete]);
+    if(successCreate){
+      history.push(`/admin/product/${createdProduct._id}`);
+    }else{
+      dispatch(listProducts())
+    }
+  }, [dispatch, history, userInfo, successDelete,successCreate,createdProduct]);
 
   const deleteHandler = (id) => {
     if (window.confirm("Are you sure?")) {
@@ -32,7 +44,9 @@ const ProductListScreen = ({ history, match }) => {
     }
   };
 
-  const createProductHandler = () => {};
+  const createProductHandler = () => {
+    dispatch(createProduct())
+  };
   return (
     <>
       <Row className='align-items-center'>
@@ -40,11 +54,13 @@ const ProductListScreen = ({ history, match }) => {
           <h1>Products</h1>
         </Col>
         <Col className='text-right'>
-          <Button className='my-3' onclick={createProductHandler}>
+          <Button className='my-3' onClick={createProductHandler}>
             <i className='fas fa-plus' /> Create Product
           </Button>
         </Col>
       </Row>
+      {loadingCreate && <Loader />}
+      {errorCreate && <Message variant='danger'>{errorCreate}</Message>}
       {loadingDelete && <Loader />}
       {errorDelete && <Message variant='danger'>{errorDelete}</Message>}
       {loading ? (
