@@ -6,7 +6,7 @@ import {notFound,errorHandler} from './middleware/errorMiddleware.js'
 import productRoutes from './routes/productRoutes.js'
 import userRoutes from './routes/userRoutes.js'
 import orderRoutes from './routes/orderRoutes.js'
-import uploadRoutes from './routes/uploadRoutes'
+import uploadRoutes from './routes/uploadRoutes.js'
 const app =express();
 app.use(express.json())
 dotenv.config()

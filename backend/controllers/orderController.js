@@ -36,7 +36,7 @@ if(orderItems && orderItems.length==0){
 //@desc create order by ID
 //@access Private
 const getOrderById = asyncHandler(async (req, res) => {
-  const order =await Order.findById(req.params.id)
+  const order =await Order.findById(req.params.id).populate('user')
    if(order){
      res.json(order)
    }else{
@@ -66,6 +66,21 @@ const updateOrderToPaid = asyncHandler(async (req, res) => {
   }
  });
 
+ //@route GET /api/orders/:id/deliver
+//@desc update order to be delivered
+//@access Private/Admin
+const updateOrderToDelivered = asyncHandler(async (req, res) => {
+  const order =await Order.findById(req.params.id).populate('user')
+  if(order){
+    order.isDelivered=true;
+    order.deliveredAt=Date.now();
+    const updatedOrder= await order.save()
+    res.json(updatedOrder)
+  }else{
+    res.status(404)
+  }
+ });
+
  //@route GET /api/orders/myorders
 //@desc get logged in user orders
 //@access Private
@@ -73,4 +88,12 @@ const getMyOrders = asyncHandler(async (req, res) => {
   const order =await Order.find({user:req.user._id})
   res.json(order)
  });
-export {addOrderItems,getOrderById,updateOrderToPaid,getMyOrders};
+
+//@route GET /api/orders
+//@desc Get all orders
+//@access Private/Admin
+const getOrders = asyncHandler(async (req, res) => {
+  const order =await Order.find({}).populate('user','id name')
+  res.json(order)
+ });
+export {addOrderItems,getOrderById,updateOrderToPaid,getMyOrders,getOrders,updateOrderToDelivered};

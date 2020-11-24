@@ -21,7 +21,9 @@ import {
   orderCreateReducer,
   orderDetailsReducer,
   orderPayReducer,
-  orderListMyReducer
+  orderListMyReducer,
+  orderListReducer,
+  orderDeliverReducer
 } from "./reducers/orderReducer";
 import { composeWithDevTools } from "redux-devtools-extension";
 
@@ -42,7 +44,9 @@ const reducer = combineReducers({
   orderCreate: orderCreateReducer,
   orderDetails: orderDetailsReducer,
   orderListMy:orderListMyReducer,
-  orderPay: orderPayReducer
+  orderList:orderListReducer,
+  orderPay: orderPayReducer,
+  orderDeliver:orderDeliverReducer
 });
 
 const cartItemsFromStorage = localStorage.getItem("cartItems")
