@@ -38,7 +38,7 @@ const ProductListScreen = ({ history, match }) => {
     }else{
       dispatch(listProducts('',pageNumber))
     }
-  }, [dispatch, history, userInfo, successDelete,successCreate,,pageNumber]);
+  }, [dispatch, history, userInfo, successDelete,successCreate,pageNumber]);
 
   const deleteHandler = (id) => {
     if (window.confirm("Are you sure?")) {
