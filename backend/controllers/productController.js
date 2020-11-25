@@ -5,7 +5,13 @@ import Product from "../models/productModel.js";
 //@desc Fetch all products
 //@access Public
 const getProducts = asyncHandler(async (req, res) => {
-  const products = await Product.find();
+  const keyword=req.query.keyword ?{
+    name:{
+      $regex:req.query.keyword,
+      $options: 'i'
+    }
+  }:{}
+  const products = await Product.find({...keyword});
   res.json(products);
 });
 
@@ -104,8 +110,6 @@ const createProductReview = asyncHandler(async (req, res) => {
       res.status(404);
       throw new Error('Product not found')
   }
-  const updatedProduct = await product.save();
-  res.json(updatedProduct);
 });
 
 export { getProductById, getProducts, deleteProduct,createProduct,updateProduct,createProductReview };
